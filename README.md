@@ -7,6 +7,7 @@ Platforms
 ---------
 
 - Windows 10
+- Unity 2019.1.10f1
 
 
 License
