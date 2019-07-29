@@ -12,7 +12,7 @@ public class EncoderToDecoder : MonoBehaviour
     [SerializeField]
     uNvPipeDecoder decoder = null;
 
-    void Start()
+    void OnEnable()
     {
         Assert.IsNotNull(encoder, "Please set encoder to EncoderToDecoder.");
         Assert.IsNotNull(decoder, "Please set decoder to EncoderToDecoder.");
@@ -20,6 +20,14 @@ public class EncoderToDecoder : MonoBehaviour
         if (encoder)
         {
             encoder.onEncoded.AddListener(OnEncoded);
+        }
+    }
+
+    void OnDisable()
+    {
+        if (encoder)
+        {
+            encoder.onEncoded.RemoveListener(OnEncoded);
         }
     }
 

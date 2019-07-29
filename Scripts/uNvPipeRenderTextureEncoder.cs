@@ -6,17 +6,30 @@ namespace uNvPipe.Examples
 
 public class uNvPipeRenderTextureEncoder : MonoBehaviour
 {
+    enum ForceIframeTiming
+    {
+        EveryFrame,
+        Periodically,
+        Manual,
+    }
+
     [SerializeField]
     uNvPipeEncoder encoder = null;
 
     [SerializeField]
-    bool forceIframe = false;
+    ForceIframeTiming forceIframeTiming = ForceIframeTiming.Periodically;
+
+    [SerializeField, Tooltip("sec")]
+    float forceIframePeriod = 1f;
 
     [SerializeField]
     RenderTexture texture = null;
 
+    public bool forceIframe { get; set; }
+
     Texture2D texture2d_;
-    float t_ = 0f;
+    float encodeTimer_ = 0f;
+    float forceIframeTimer_ = 0f;
 
     void Start()
     {
@@ -43,13 +56,37 @@ public class uNvPipeRenderTextureEncoder : MonoBehaviour
         else
         {
             var T = 1f / encoder.fps;
-            t_ += Time.deltaTime;
+            encodeTimer_ += Time.deltaTime;
 
-            if (t_ >= T)
+            if (encodeTimer_ >= T)
             {
-                t_ -= T;
+                encodeTimer_ -= T;
                 Encode();
             }
+        }
+    }
+
+    void UpdateIframe()
+    {
+        switch (forceIframeTiming)
+        {
+            case ForceIframeTiming.Manual:
+                break;
+            case ForceIframeTiming.EveryFrame:
+                forceIframe = true;
+                break;
+            case ForceIframeTiming.Periodically:
+                if (forceIframeTimer_ <= 0f)
+                {
+                    forceIframeTimer_ += forceIframePeriod;
+                    forceIframe = true;
+                }
+                else
+                {
+                    forceIframe = false;
+                }
+                forceIframeTimer_ -= Time.deltaTime;
+                break;
         }
     }
 
@@ -64,6 +101,8 @@ public class uNvPipeRenderTextureEncoder : MonoBehaviour
             return;
         }
 
+        UpdateIframe();
+
 		var activeRenderTexture = RenderTexture.active;
 		RenderTexture.active = texture;
 
@@ -73,6 +112,7 @@ public class uNvPipeRenderTextureEncoder : MonoBehaviour
 
 		RenderTexture.active = activeRenderTexture;
 
+        Debug.Log(forceIframe);
         encoder.Encode(texture2d_, forceIframe);
     }
 }
