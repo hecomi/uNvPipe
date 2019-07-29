@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.Assertions;
-using System.IO;
-using System.Runtime.InteropServices;
 
 namespace uNvPipe.Examples
 {
@@ -17,56 +15,32 @@ public class uNvPipeRenderTextureEncoder : MonoBehaviour
     [SerializeField]
     RenderTexture texture = null;
 
-    [SerializeField]
-    bool outputToFile = false;
-
-    [SerializeField]
-    string filePath = "test.h264";
-
     Texture2D texture2d_;
     float t_ = 0f;
 
-    FileStream fileStream_;
-    BinaryWriter binaryWriter_;
-
     void Start()
     {
-        Assert.IsNotNull(encoder, "Please set encoder.");
-        Assert.IsNotNull(texture, "Please set texture.");
-
-        if (outputToFile)
-        {
-            fileStream_ = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-            binaryWriter_ = new BinaryWriter(fileStream_);
-        }
-
-        if (encoder)
-        {
-            encoder.onEncoded.AddListener(OnEncoded);
-        }
-
-        if (texture)
-        {
-            texture2d_ = new Texture2D(
-                texture.width,
-                texture.height,
-                TextureFormat.RGBA32,
-                false,
-                false);
-        }
+        InitTexture();
+        InitEncoder();
     }
 
-    void OnApplicationQuit()
+    void InitEncoder()
     {
-        if (binaryWriter_ != null) 
-        {
-            binaryWriter_.Close();
-        }
+        Assert.IsNotNull(encoder, "Please set encoder.");
+    }
 
-        if (fileStream_ != null) 
-        {
-            fileStream_.Close();
-        }
+    void InitTexture()
+    {
+        Assert.IsNotNull(texture, "Please set texture.");
+
+        if (!texture) return;
+        
+        texture2d_ = new Texture2D(
+            texture.width,
+            texture.height,
+            TextureFormat.RGBA32,
+            false,
+            false);
     }
 
     void Update()
@@ -102,15 +76,6 @@ public class uNvPipeRenderTextureEncoder : MonoBehaviour
 		RenderTexture.active = activeRenderTexture;
 
         encoder.Encode(texture2d_, forceIframe);
-    }
-
-    void OnEncoded(System.IntPtr ptr, int size)
-    {
-        if (!outputToFile) return;
-
-        var bytes = new byte[size];
-        Marshal.Copy(ptr, bytes, 0, size);
-        binaryWriter_.Write(bytes);
     }
 }
 

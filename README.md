@@ -1,7 +1,7 @@
 uNvPipe
 =======
 
-**uNvPipe** is a simple wrapper of [NvPipe](https://github.com/NVIDIA/NvPipe).
+**uNvPipe** is a simple wrapper of [NvPipe](https://github.com/NVIDIA/NvPipe) for Unity.
 
 Platforms
 ---------
