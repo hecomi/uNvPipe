@@ -68,6 +68,9 @@ bool Decoder::Initialize()
             NvPipe_Destroy(pPtr);
         });
 
+    data_[0] = std::make_unique<uint8_t[]>(GetDecodedSize());
+    data_[1] = std::make_unique<uint8_t[]>(GetDecodedSize());
+
     return nvpipe_ != nullptr;
 }
 
@@ -76,13 +79,11 @@ bool Decoder::Decode(const void *pData, uint32_t size)
 {
     if (!IsValid() || pData == nullptr) return false;
 
-    std::unique_ptr<uint8_t[]> buf(new uint8_t[GetDecodedSize()]);
-
     const auto r = NvPipe_Decode(
         nvpipe_.get(),
         static_cast<const uint8_t*>(pData), 
         size,
-        buf.get(), 
+        data_[0].get(), 
         width_, 
         height_);
 
@@ -90,7 +91,7 @@ bool Decoder::Decode(const void *pData, uint32_t size)
 
     {
         std::lock_guard<std::mutex> lock(dataMutex_);
-        data_.emplace(latestDecodedIndex_++, std::move(buf));
+        std::swap(data_[0], data_[1]);
     }
 
     return true;
@@ -105,8 +106,7 @@ const uint32_t Decoder::GetDecodedSize() const
 
 const uint8_t * Decoder::GetDecodedData() const
 {
-    const auto it = data_.find(latestDecodedIndex_);
-    return (it != data_.end()) ? it->second.get() : nullptr;
+    return data_[1].get();
 }
 
 
@@ -116,11 +116,6 @@ void Decoder::OnTextureUpdate(int eventId, void *pData)
 
     if (event == kUnityRenderingExtEventUpdateTextureBeginV2)
     {
-        if (isUpdating_) return;
-
-        const auto it = data_.find(textureIndex_);
-        if (it == data_.end()) return;
-
         auto *pParams = static_cast<UnityRenderingExtTextureUpdateParamsV2*>(pData);
         if (width_ != pParams->width || 
             height_ != pParams->height)
@@ -128,16 +123,10 @@ void Decoder::OnTextureUpdate(int eventId, void *pData)
             return;
         }
 
-        isUpdating_ = true;
-        pParams->texData = it->second.get();
-    }
-    else if (event == kUnityRenderingExtEventUpdateTextureEndV2)
-    {
-        if (!isUpdating_) return;
-
-        std::lock_guard<std::mutex> lock(dataMutex_);
-        data_.erase(textureIndex_++);
-        isUpdating_ = false;
+        {
+            std::lock_guard<std::mutex> lock(dataMutex_);
+            pParams->texData = data_[1].get();
+        }
     }
 }
 

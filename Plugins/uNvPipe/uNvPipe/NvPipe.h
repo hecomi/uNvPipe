@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <array>
 #include <atomic>
 #include <mutex>
 #include <vector>
@@ -104,10 +105,7 @@ public:
 
 private:
     std::mutex dataMutex_;
-    DataIndex latestDecodedIndex_ = 0U;
-    DataIndex textureIndex_ = 0U;
-    std::unordered_map<DataIndex, std::unique_ptr<uint8_t[]>> data_;
-    std::atomic<bool> isUpdating_ = false;
+    std::array<std::unique_ptr<uint8_t[]>, 2> data_;
 };
 
 
