@@ -112,7 +112,6 @@ public class uNvPipeRenderTextureEncoder : MonoBehaviour
 
 		RenderTexture.active = activeRenderTexture;
 
-        Debug.Log(forceIframe);
         encoder.Encode(texture2d_, forceIframe);
     }
 }
