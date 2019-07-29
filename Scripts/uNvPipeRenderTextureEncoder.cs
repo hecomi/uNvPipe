@@ -20,27 +20,18 @@ public class uNvPipeRenderTextureEncoder : MonoBehaviour
 
     void Start()
     {
-        InitTexture();
-        InitEncoder();
-    }
-
-    void InitEncoder()
-    {
         Assert.IsNotNull(encoder, "Please set encoder.");
-    }
-
-    void InitTexture()
-    {
         Assert.IsNotNull(texture, "Please set texture.");
 
-        if (!texture) return;
-        
-        texture2d_ = new Texture2D(
-            texture.width,
-            texture.height,
-            TextureFormat.RGBA32,
-            false,
-            false);
+        if (texture)
+        {
+            texture2d_ = new Texture2D(
+                texture.width,
+                texture.height,
+                TextureFormat.RGBA32,
+                false,
+                false);
+        }
     }
 
     void Update()
@@ -65,6 +56,13 @@ public class uNvPipeRenderTextureEncoder : MonoBehaviour
     void Encode()
     {
         if (!texture || !encoder) return;
+
+        if (encoder.width != texture.width ||
+            encoder.height != texture.height)
+        {
+            Debug.LogError("encoder size is different from the given render texture.");
+            return;
+        }
 
 		var activeRenderTexture = RenderTexture.active;
 		RenderTexture.active = texture;
