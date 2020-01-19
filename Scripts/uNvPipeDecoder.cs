@@ -19,9 +19,6 @@ public class uNvPipeDecoder : MonoBehaviour
     [SerializeField]
     public Format format = Format.RGBA32;
 
-    [SerializeField]
-    bool multithreaded = true;
-
     public int id { get; private set; } = -1;
 
     public bool isValid
@@ -85,14 +82,7 @@ public class uNvPipeDecoder : MonoBehaviour
 
     public async void Decode(System.IntPtr data, int size)
     {
-        if (multithreaded)
-        {
-            await Task.Run(() => _Decode(data, size));
-        }
-        else
-        {
-            _Decode(data, size);
-        }
+        _Decode(data, size);
 
         if (isDecoded_)
         {
