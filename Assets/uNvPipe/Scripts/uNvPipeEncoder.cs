@@ -29,9 +29,6 @@ public class uNvPipeEncoder : MonoBehaviour
     [SerializeField]
     public Compression compression = Compression.LOSSY;
 
-    [SerializeField]
-    bool multithreaded = true;
-
     public int id { get; private set; } = -1;
 
     public bool isValid
@@ -85,14 +82,7 @@ public class uNvPipeEncoder : MonoBehaviour
 
     public async Task Encode(System.IntPtr data, bool forceIframe = false)
     {
-        if (multithreaded)
-        {
-            await Task.Run(() => _Encode(data, forceIframe));
-        }
-        else
-        {
-            _Encode(data, forceIframe);
-        }
+        _Encode(data, forceIframe);
 
         if (isEncoded_)
         {
