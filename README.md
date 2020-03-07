@@ -3,12 +3,12 @@ uNvPipe
 
 **uNvPipe** is a simple wrapper of [NvPipe](https://github.com/NVIDIA/NvPipe) for Unity.
 
-Platforms
----------
+Environment / Dependencies
+--------------------------
 
 - Windows 10
-- Unity 2019.1.10f1
-
+- Unity 2019.3.1f1
+- [uOSC v0.0.2](https://github.com/hecomi/uOSC) (for network examples)
 
 License
 -------
