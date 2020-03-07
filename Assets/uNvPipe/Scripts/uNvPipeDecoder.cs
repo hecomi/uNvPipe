@@ -80,7 +80,7 @@ public class uNvPipeDecoder : MonoBehaviour
         }
     }
 
-    public async void Decode(System.IntPtr data, int size)
+    public void Decode(System.IntPtr data, int size)
     {
         _Decode(data, size);
 

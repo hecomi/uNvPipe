@@ -80,7 +80,7 @@ public class uNvPipeEncoder : MonoBehaviour
         }
     }
 
-    public async Task Encode(System.IntPtr data, bool forceIframe = false)
+    public void Encode(System.IntPtr data, bool forceIframe = false)
     {
         _Encode(data, forceIframe);
 
@@ -90,13 +90,13 @@ public class uNvPipeEncoder : MonoBehaviour
         }
     }
 
-    public async void Encode(Texture2D texture, bool forceIframe = false)
+    public void Encode(Texture2D texture, bool forceIframe = false)
     {
         var pixels  = texture.GetPixels32();
         var handle  = GCHandle.Alloc(pixels, GCHandleType.Pinned);
         var pointer = handle.AddrOfPinnedObject();
 
-        await Encode(pointer, forceIframe);
+        Encode(pointer, forceIframe);
 
         handle.Free();
     }
