@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/uNvPipe/Examples/Scenes/DecoderNetwork.unity
+    path: Assets/uNvPipe/Samples/02. uOSC + Network/DecoderNetwork.unity
     guid: 2c3b720ef67e3e64587acc1d582f9eab
   m_configObjects: {}
