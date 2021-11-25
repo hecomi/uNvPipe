@@ -1,0 +1,40 @@
+{
+    "name": "com.hecomi.unvpipe",
+    "version": "1.0.0",
+    "displayName": "uNvPipe",
+    "description": "A simple NvPipe wrapper for Unity",
+    "author": {
+        "name": "hecomi",
+        "url": "https://tips.hecomi.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hecomi/uNvPipe"
+    },
+    "keywords": [
+        "unity",
+        "nvidia",
+        "nvenc",
+        "nvdec",
+        "nvpipe",
+        "native-plugin"
+    ],
+    "license": "MIT License",
+    "samples": [
+        {
+            "displayName": "00. Common",
+            "description": "Common assets for all samples",
+            "path": "Samples~/00. Common"
+        },
+        {
+            "displayName": "01. Basic",
+            "description": "Basic examples",
+            "path": "Samples~/01. Basic"
+        },
+        {
+            "displayName": "02. uOSC + Network",
+            "description": "Send an encoded stream and decode it in the other scene",
+            "path": "Samples~/02. uOSC + Network"
+        }
+    ]
+}
